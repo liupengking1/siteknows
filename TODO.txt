@@ -1,0 +1,25 @@
+* One user has reported that some images does not load completely. The top and bottom is cut off.
+  Maybe this is due to the delayed loading? 
+
+* Possibility to see distance on the map
+
+* Sharing maps?
+
+* Waypoints and naming waypoints. 
+
+* Possibility to rename maps. Or maybe use a comment. Need to add a new column to the database then.
+
+* Gör det möjligt att ta backup på databasen. Samt inställningarna.
+
+* Om jag ska sampla om bilden så måste jag även göra om kalibreringen eftersom den är knuten till samplingen
+  Måste triggas från vyn. Kanske lägga över kalibreringen i ett annat objekt?
+  Skulle även underlätta i framtiden om jag vill kunna välja vilka punkter som ska användas vid kalibreringen. 
+
+* Gör om så att sparadet av referenspunkten sker i en egen activity så får det plats bättre.
+
+* Visa changelog efter nyinstallation.
+
+* Kolla upp om jag behöver kolla om sd-kordet körs i read-only/finns osv.
+ http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
+
+* Starta bilden i utzoomat läge så att man ser hela
