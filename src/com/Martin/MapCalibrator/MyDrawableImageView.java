@@ -141,12 +141,12 @@ public class MyDrawableImageView extends ImageView{
 		// Make the view redraw itself after we have changed our position on the map
 		postInvalidate();
 	}
-	
+
 	private float[] mapPointLocation(int location) {
 		// TODO Auto-generated method stub
 		float[] temp=new float[2];
-		temp[0]=0;
-		temp[1]=0;
+		temp[0]=location*5;
+		temp[1]=location*5;
 		return temp;
 	}
 

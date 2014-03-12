@@ -11,21 +11,22 @@ public class MyIndoorLocationListener implements IndoorLocationListener {
 
 	protected MyIndoorLocationListener(MyDrawableImageView view, Context context) {
 		this.view = view;
-		updateindoorlocation=new UpdateIndoorLocation();
+		updateindoorlocation = new UpdateIndoorLocation();
 		updateindoorlocation.setTheListener(this, context);
 	}
 
 	protected void startListening() {
 		System.out.println("indoorlocation updater: start listening");
 		if (updateindoorlocation != null)
-			updateindoorlocation.startScanningThread();
+			if (!updateindoorlocation.IsScanRunning())
+				updateindoorlocation.startScanningThread();
 	}
 
 	protected void stopListening() {
 		System.out.println("indoorlocation updater: stop listening");
-//		
-//		if (updateindoorlocation != null)
-//			updateindoorlocation.stopScanningThread();
+		//
+		if (updateindoorlocation != null)
+			updateindoorlocation.stopScanningThread();
 	}
 
 	protected int getLastLocation() {
@@ -37,6 +38,6 @@ public class MyIndoorLocationListener implements IndoorLocationListener {
 		lastLocation = position;
 		// view.makeUseOfNewLocation(location);
 		view.makeUseOfNewLocation(position);
-//		view.makeUseOfNewLocation(new Location("new location"));
+		// view.makeUseOfNewLocation(new Location("new location"));
 	}
 }

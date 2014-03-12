@@ -33,7 +33,7 @@ public class UpdateIndoorLocation {
 	public void setTheListener(IndoorLocationListener listen, Context context) {
 		mTheListener = listen;
 		this.context = context;
-
+		System.out.println("setTheListener!!!");
 		// Setup WiFi
 		wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		ConnectivityManager mag = (ConnectivityManager) context
@@ -222,13 +222,16 @@ public class UpdateIndoorLocation {
 
 	public void stopScanningThread() {
 		System.out.println("stopScanning Thread");
-//		should_scan = false;
+		should_scan = false;
 	}
 
 	public void startScanningThread() {
 		System.out.println("updateIndoorlocation: start scanning thread");
-//		if (should_scan = false)
+		if (should_scan == false)
 			CreateUpdateThread();
+	}
+	public boolean IsScanRunning(){
+		return should_scan;
 	}
 
 	public int readPositionFromServer(String src) {

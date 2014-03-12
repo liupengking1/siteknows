@@ -179,7 +179,8 @@ public class MapCalibrator extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		if (m_SavableData.m_bIsTrackingPosition == true&&locationListener!=null)
+		if (m_SavableData.m_bIsTrackingPosition == true
+				&& locationListener != null)
 			locationListener.startListening();
 	}
 
@@ -187,8 +188,9 @@ public class MapCalibrator extends Activity {
 	protected void onPause() {
 		super.onPause();
 
-//		if (m_SavableData.m_bIsTrackingPosition == true)
-//			locationListener.stopListening();
+		if (m_SavableData.m_bIsTrackingPosition == true
+				&& locationListener != null)
+			locationListener.stopListening();
 
 		try {// We could try to keep track of wether it is displayed, but this
 				// is easier.
@@ -203,7 +205,8 @@ public class MapCalibrator extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (isFinishing() && m_SavableData.m_bIsTrackingPosition&&locationListener!=null)
+		if (isFinishing() && m_SavableData.m_bIsTrackingPosition
+				&& locationListener != null)
 			locationListener.stopListening();
 	}
 
