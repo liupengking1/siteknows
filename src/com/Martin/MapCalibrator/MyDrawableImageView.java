@@ -176,10 +176,6 @@ public class MyDrawableImageView extends ImageView {
 			if (c.moveToFirst()) {
 				// Now create an array adapter and set it to display using our
 				// row
-				//
-//				System.out.println("index:" + c.getInt(1) + " x:"
-//						+ c.getFloat(2) + " y:" + c.getFloat(3));
-
 				do
 					if (c.getInt(1) == location) {
 						temp[0] = c.getFloat(2);

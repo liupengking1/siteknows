@@ -563,7 +563,8 @@ public class MapCalibrator extends Activity {
 							coordinate);
 					database.close();
 
-					// tryToCalibrateMap();
+					UploadWifiFingerprint upload=new UploadWifiFingerprint();
+					upload.scanAndUpload(getApplicationContext(), "null", lastLocationIndex);
 				} catch (IllegalArgumentException e) {
 					// Log.e(TAG, "unable to convert gps coordinates " +
 					// e.toString());
