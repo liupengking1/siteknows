@@ -68,7 +68,7 @@ public class MyDrawableImageView extends ImageView{
 		
 		if (this.isInEditMode())
 			return;
-			
+		
 		zoomButtons = new ZoomButtonsController(this);
 		zoomButtons.setOnZoomListener(new MyZoomController(this));
 		Initialize();
@@ -94,7 +94,7 @@ public class MyDrawableImageView extends ImageView{
 		
 		this.setImageMatrix(m_SavableData.currentMapTileToDisplayMatrix);
 		
-		m_SavableData.isTrackingPosition = false;
+		m_SavableData.isTrackingPosition = true;
 		m_SavableData.isCalibrating      = false;
 		
 		m_CalibrationDrawable = null; // TODO: Do I really have to reset these?
@@ -106,19 +106,20 @@ public class MyDrawableImageView extends ImageView{
 		this.largeMapSupport = flag;
 	}
 	
-	// Called from the gps
-	protected void makeUseOfNewLocation(Location location) {
+	// Called from the IndoorLocation updater
+	protected void makeUseOfNewLocation(int location) {
 		m_SavableData.lastLocation = location;
 		
-		if (!m_SavableData.isTrackingPosition || m_SavableData.gpsToMapMapMatrix == null)
+		if (!m_SavableData.isTrackingPosition)
 			return;
 		
 		if (m_SavableData.m_PositionMapPosition == null || m_PositionDrawable == null)
 			createNewPositionPoint();
 		
-		float[] gpsCoordinate = {(float)location.getLatitude(), (float)location.getLongitude()};
+//		float[] gpsCoordinate = {(float)location.getLatitude(), (float)location.getLongitude()};
 		float[] mapCoordinate = new float[2];		
-		m_SavableData.gpsToMapMapMatrix.mapPoints(mapCoordinate, gpsCoordinate);
+//		m_SavableData.gpsToMapMapMatrix.mapPoints(mapCoordinate, gpsCoordinate);
+		mapCoordinate=mapPointLocation(location);
 		
 		float newLeft = (float) (mapCoordinate[0] - m_SavableData.m_PositionMapPosition.width() / 2.0);
 		float newTop = (float) (mapCoordinate[1] - m_SavableData.m_PositionMapPosition.height() / 2.0);
@@ -141,27 +142,36 @@ public class MyDrawableImageView extends ImageView{
 		postInvalidate();
 	}
 	
-	protected void setMapMatrix(Matrix mapMatrix) {
-		m_SavableData.gpsToMapMapMatrix = mapMatrix;
-		m_SavableData.isTrackingPosition = true;
-		//TODO:For debugging only
-		//Location temp = new Location(LocationManager.NETWORK_PROVIDER);
-		//temp.setLatitude(56.90153);
-		//temp.setLongitude(14.73982);
-		//makeUseOfNewLocation(temp); //Draw out position on the map.
-		if (m_SavableData.lastLocation != null)
-			makeUseOfNewLocation(m_SavableData.lastLocation); //Draw out position on the map.
+	private float[] mapPointLocation(int location) {
+		// TODO Auto-generated method stub
+		float[] temp=new float[2];
+		temp[0]=0;
+		temp[1]=0;
+		return temp;
 	}
+
+//	protected void setMapMatrix(Matrix mapMatrix) {
+//		m_SavableData.gpsToMapMapMatrix = mapMatrix;
+//		m_SavableData.isTrackingPosition = true;
+//		//TODO:For debugging only
+//		//Location temp = new Location(LocationManager.NETWORK_PROVIDER);
+//		//temp.setLatitude(56.90153);
+//		//temp.setLongitude(14.73982);
+//		//makeUseOfNewLocation(temp); //Draw out position on the map.
+//		// 0 is default for null
+//		if (m_SavableData.lastLocation != 0)
+//			makeUseOfNewLocation(m_SavableData.lastLocation); //Draw out position on the map.
+//	}
 	
 	/*
 	 * Resets the map calibration.
 	 */
-	protected void resetMapMatrix() {
-		m_SavableData.gpsToMapMapMatrix = new Matrix(); //Needs to be something when we parcel it.
-		m_SavableData.isTrackingPosition = false;
-		// Make the view redraw itself so that a possible position point is removed
-		postInvalidate();		
-	}
+//	protected void resetMapMatrix() {
+//		m_SavableData.gpsToMapMapMatrix = new Matrix(); //Needs to be something when we parcel it.
+//		m_SavableData.isTrackingPosition = false;
+//		// Make the view redraw itself so that a possible position point is removed
+//		postInvalidate();		
+//	}
 		
 	@TargetApi(10)
 	protected void setMap(File bitmapFile) {
@@ -792,7 +802,7 @@ class mapSaveData implements Parcelable{
 	Rect m_CalibrationPositionOnDisplay;  //position on the screen.   Used for finger press detection
 	RectF m_calibrationPositionOnGlobalMap;   //position on the map/image
 	
-	Location lastLocation; //To be able to draw out position if we don't get a new location after the map is set.
+	int lastLocation; //To be able to draw out position if we don't get a new location after the map is set.
 
 	// These matrices will be used to move and zoom the current part of the image
 	Matrix currentMapTileToDisplayMatrix = new Matrix();
@@ -803,7 +813,7 @@ class mapSaveData implements Parcelable{
 	Matrix savedGlobalMapToDisplayMatrix = new Matrix();
 
 	//Used for converting gps coordinates to map coordinates
-	Matrix gpsToMapMapMatrix = new Matrix(); //Needs to be something when we parcel it.
+//	Matrix gpsToMapMapMatrix = new Matrix(); //Needs to be something when we parcel it.
 	
 	
 	public int describeContents() {
@@ -834,7 +844,7 @@ class mapSaveData implements Parcelable{
         	out.writeParcelable(m_CalibrationPositionOnDisplay, flags);
         	out.writeParcelable(m_calibrationPositionOnGlobalMap, flags);
         }
-        out.writeParcelable(lastLocation, flags);
+        out.writeInt(lastLocation);
         
         float[] temp = new float[9];
         currentMapTileToDisplayMatrix.getValues(temp);
@@ -851,10 +861,7 @@ class mapSaveData implements Parcelable{
         temp = new float[9];
         savedGlobalMapToDisplayMatrix.getValues(temp);
         out.writeFloatArray(temp);
-        
-        temp = new float[9];
-        gpsToMapMapMatrix.getValues(temp);
-        out.writeFloatArray(temp);        
+            
     }
 	
 	private mapSaveData(Parcel in) {        
@@ -886,10 +893,9 @@ class mapSaveData implements Parcelable{
         
         in.readFloatArray(temp);
         savedGlobalMapToDisplayMatrix.setValues(temp);
-        
-        in.readFloatArray(temp);
-        gpsToMapMapMatrix.setValues(temp);        
+           
     }
 	
 	public mapSaveData(){}
+	
 }

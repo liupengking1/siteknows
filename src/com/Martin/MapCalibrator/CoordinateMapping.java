@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 public class CoordinateMapping implements Parcelable{
 	public PointF mapCoordinate;
-	public PointF gpsCoordinate; // This is the final gps coordinate after possible change and verification by the user
+	public int WifiCoordinateIndex; // This is the final gps coordinate after possible change and verification by the user
 	
 	public int describeContents() {
         return 0;
@@ -14,7 +14,8 @@ public class CoordinateMapping implements Parcelable{
 
 	public void writeToParcel(Parcel out, int flags) {
         out.writeFloatArray(new float[]{mapCoordinate.x, mapCoordinate.y});
-        out.writeFloatArray(new float[]{gpsCoordinate.x, gpsCoordinate.x});
+//        out.writeFloatArray(new float[]{gpsCoordinate.x, gpsCoordinate.x});
+        out.writeInt(WifiCoordinateIndex);
     }
 	
 	public static final Parcelable.Creator<CoordinateMapping> CREATOR
@@ -33,14 +34,13 @@ public class CoordinateMapping implements Parcelable{
 		in.readFloatArray(fTemp);
 		this.mapCoordinate = new PointF(fTemp[0], fTemp[1]);
 		
-		fTemp = new float[2];
-		in.readFloatArray(fTemp);
-		this.gpsCoordinate = new PointF(fTemp[0], fTemp[1]);
+		
+		this.WifiCoordinateIndex = in.readInt();
 	}
 
 	
-	public CoordinateMapping(PointF mapCoordinate, PointF gpsCoordinate) {
+	public CoordinateMapping(PointF mapCoordinate, int location) {
 		this.mapCoordinate = mapCoordinate;		
-		this.gpsCoordinate = gpsCoordinate;
+		this.WifiCoordinateIndex = location;
 	}	
 }

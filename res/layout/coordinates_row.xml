@@ -28,18 +28,10 @@
         android:layout_weight="1" >
 
         <TableRow >
-            <TextView android:text="latitude: " />
+            <TextView android:text="positionindex: " />
             <TextView
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/latitude"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
-        <TableRow >
-            <TextView android:text="longitude: " />
-            <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/longitude"
+                android:id="@+id/positionindex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </TableRow>

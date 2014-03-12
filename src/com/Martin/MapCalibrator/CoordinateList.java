@@ -53,10 +53,10 @@ public class CoordinateList extends ListActivity {
 
 		String[] from = new String[] {
 				"_id", // Renamed
-				DBAdapter.KEY_POINTS_LATITUDE, DBAdapter.KEY_POINTS_LONGITUDE,
-				DBAdapter.KEY_POINTS_MAPX, DBAdapter.KEY_POINTS_MAPY };
-		int[] to = new int[] { R.id.row_id, R.id.latitude, R.id.longitude,
-				R.id.mapx, R.id.mapy };
+				DBAdapter.KEY_POINTS_INDEX, DBAdapter.KEY_POINTS_MAPX,
+				DBAdapter.KEY_POINTS_MAPY };
+		int[] to = new int[] { R.id.row_id, R.id.positionindex, R.id.mapx,
+				R.id.mapy };
 
 		if (c != null) {
 			if (c.moveToFirst()) {
@@ -99,9 +99,10 @@ public class CoordinateList extends ListActivity {
 		}
 
 		public void setViewText(TextView v, String text) {
-			if (v.getId() == R.id.latitude || v.getId() == R.id.longitude) {
-				text = Location.convert(Double.parseDouble(text), Location.FORMAT_MINUTES);
-			}
+//			if (v.getId() == R.id.positionindex) {
+//				text = Location.convert(Double.parseDouble(text),
+//						Location.FORMAT_MINUTES);
+//			}
 			v.setText(text);
 		}
 

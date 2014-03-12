@@ -211,9 +211,9 @@ public class MapListFragment extends ListFragment {
 		}
 
 		public void setViewText(TextView v, String text) {
-			if (v.getId() == R.id.latitude || v.getId() == R.id.longitude) {
-				text = Location.convert(Double.parseDouble(text), Location.FORMAT_MINUTES);
-			}
+//			if (v.getId() == R.id.positionindex) {
+//				text = Location.convert(Double.parseDouble(text), Location.FORMAT_MINUTES);
+//			}
 			v.setText(text);
 		}
 	}

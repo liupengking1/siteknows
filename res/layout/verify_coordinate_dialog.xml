@@ -8,21 +8,9 @@
     <TextView android:id="@+id/gps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GPS Coordinates:" />
-    <TextView android:id="@+id/gps_accuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Accuracy:" />
-    <TextView android:id="@+id/location_age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Age:" />    
+        android:text="WiFi fingerprint Index:" />
     <EditText
-        android:id="@+id/gpsLatitude"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:id="@+id/gpsLongitude"
+        android:id="@+id/wifiLocationIndex"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
     <TextView android:id="@+id/map"
