@@ -57,7 +57,6 @@ public class UpdateIndoorLocation {
 			public void run() {
 				int count=1;
 				while (should_scan) {
-					System.out.println("scanning in background");
 //					wifi.startScan();
 					try {
 						Thread.sleep(700);
@@ -68,7 +67,7 @@ public class UpdateIndoorLocation {
 					if (true) {
 						// for debugging
 						System.out.println("wifi scanning debugging, count:"+count);
-						reportPositionChanged(count);
+						reportPositionChanged(count%4);
 						count++;
 					} else {
 

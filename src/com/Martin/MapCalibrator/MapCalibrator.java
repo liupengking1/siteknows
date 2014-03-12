@@ -150,6 +150,8 @@ public class MapCalibrator extends Activity {
 				File temp = new File(lastUsedMap);
 				if (temp.exists()) {
 					m_SavableData.mapFile = new File(lastUsedMap);
+					m_SavableData.m_iMapKey = settings.getLong(
+							"lastUsedMapKey", 0);
 					resetForNewMap();
 				} else {
 					Toast.makeText(
@@ -163,6 +165,14 @@ public class MapCalibrator extends Activity {
 				// startActivityForResult(intent,
 				// ACTIVITY_REQUEST_CODE_SELECT_MAP);
 			}
+		}
+
+		try {// We could try to keep track of wether it is displayed, but this
+				// is easier.
+				// Dialogs should be dismissed in OnPause to avoid problems.
+			dismissDialog(DIALOG_COORDINATE_VERIFICATION_ID);
+		} catch (IllegalArgumentException e) {
+			// The dialog was not currently displayed.
 		}
 	}
 
@@ -245,18 +255,6 @@ public class MapCalibrator extends Activity {
 			if (android.os.Build.VERSION.SDK_INT < 10)
 				supportLargeMaps = false;
 		}
-		m_SavableData.mapView.setSupportLargeMaps(supportLargeMaps); // Must be
-																		// called
-																		// before
-																		// setMap(
-
-		m_SavableData.mapView.setMap(m_SavableData.mapFile);
-
-		// Save the last used map so that we can auto load it upon next run
-		SharedPreferences settings = (SharedPreferences) getPreferences(MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("lastUsedMap", m_SavableData.mapFile.getAbsolutePath());
-		editor.commit();
 
 		database.open();
 		m_SavableData.m_iMapKey = database.getMapKey(m_SavableData.mapFile
@@ -272,6 +270,21 @@ public class MapCalibrator extends Activity {
 					m_SavableData.mapFile.getAbsolutePath());
 			database.close();
 		}
+
+		m_SavableData.mapView.setSupportLargeMaps(supportLargeMaps); // Must be
+																		// called
+																		// before
+																		// setMap(
+		m_SavableData.mapView.getSaveableData().m_iMapKey = m_SavableData.m_iMapKey;
+
+		m_SavableData.mapView.setMap(m_SavableData.mapFile);
+
+		// Save the last used map so that we can auto load it upon next run
+		SharedPreferences settings = (SharedPreferences) getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("lastUsedMap", m_SavableData.mapFile.getAbsolutePath());
+		editor.putLong("lastUsedMapKey", m_SavableData.m_iMapKey);
+		editor.commit();
 
 		if (locationListener == null) {
 			m_SavableData.m_bIsTrackingPosition = true; // TODO:We really don't
@@ -719,8 +732,8 @@ class SaveData implements Parcelable {
 				m_bIsTrackingPosition });
 
 		out.writeLong(m_iMapKey);
-
-		// out.writeParcelable(mapView.getSaveableData(), flags);
+		mapView.getSaveableData().m_iMapKey = m_iMapKey;
+		out.writeParcelable(mapView.getSaveableData(), flags);
 	}
 
 	public static final Parcelable.Creator<SaveData> CREATOR = new Parcelable.Creator<SaveData>() {
