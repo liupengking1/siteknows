@@ -9,13 +9,13 @@ public class MyIndoorLocationListener implements IndoorLocationListener {
 	private int lastLocation;
 	UpdateIndoorLocation updateindoorlocation;
 
-	protected MyIndoorLocationListener(MyDrawableImageView view, Context context) {
+	public MyIndoorLocationListener(MyDrawableImageView view, Context context) {
 		this.view = view;
 		updateindoorlocation = new UpdateIndoorLocation();
 		updateindoorlocation.setTheListener(this, context);
 	}
 
-	protected void startListening() {
+	public void startListening() {
 		System.out.println("indoorlocation updater: start listening");
 		if (updateindoorlocation != null)
 			if (!updateindoorlocation.IsScanRunning())
