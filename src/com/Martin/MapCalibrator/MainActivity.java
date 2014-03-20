@@ -51,8 +51,10 @@ public class MainActivity extends FragmentActivity implements
 				// make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
 				if (position == 1) {
+//					Intent i = new Intent(getApplicationContext(),
+//							com.Martin.MapCalibrator.MapCalibrator.class);
 					Intent i = new Intent(getApplicationContext(),
-							com.Martin.MapCalibrator.MapCalibrator.class);
+							PopupWindow.class);
 					startActivity(i);
 				}
 			}

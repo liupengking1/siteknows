@@ -70,6 +70,7 @@
             android:name=".MyPreferencesActivity"
             android:exported="false" >
         </activity>
+        <activity android:name=".PopupWindow" android:theme="@style/MyDialogStyleBottom" /> 
     </application>
 
 </manifest>
