@@ -5,6 +5,7 @@ import com.siteknows.museum.adapter.TabsPagerAdapter;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -26,7 +27,8 @@ public class MainActivity extends FragmentActivity implements
 		// Initilization
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
-		mAdapter = new TabsPagerAdapter(getSupportFragmentManager(), savedInstanceState);
+		mAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
+				savedInstanceState);
 
 		viewPager.setAdapter(mAdapter);
 		// actionBar.setHomeButtonEnabled(false);
@@ -48,6 +50,11 @@ public class MainActivity extends FragmentActivity implements
 				// on changing the page
 				// make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
+				if (position == 1) {
+					Intent i = new Intent(getApplicationContext(),
+							com.Martin.MapCalibrator.MapCalibrator.class);
+					startActivity(i);
+				}
 			}
 
 			@Override

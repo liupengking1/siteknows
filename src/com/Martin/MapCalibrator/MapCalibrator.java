@@ -146,6 +146,7 @@ public class MapCalibrator extends Activity {
 
 			// Get the last used map (if any)
 			String lastUsedMap = settings.getString("lastUsedMap", "");
+			System.out.println("debuging......" + lastUsedMap);
 			if (lastUsedMap.length() != 0) {
 				File temp = new File(lastUsedMap);
 				if (temp.exists()) {
@@ -579,52 +580,6 @@ public class MapCalibrator extends Activity {
 				showDialog(DIALOG_CONVERSION_ERROR);
 		}
 	}
-
-	/*
-	 * Tries to calibrate the loaded map using the 3 first stored coordinates.
-	 */
-	// private void tryToCalibrateMap() {
-	// if (m_SavableData.coordinateMappingList.size() < 3)
-	// return;
-	//
-	// //GPS stuff
-	// int nbr = m_SavableData.coordinateMappingList.size();
-	// int MAX = 3; // It does not seem to work with 4 coordinates when we try
-	// to map. The mappings get totally wrong.
-	// nbr = (nbr > MAX ? MAX : nbr); // We only handle a maximum of MAX
-	// coordinates
-	// Matrix mapMatrix = new Matrix();
-	// boolean result = false;
-	//
-	// int iSampleSize = m_SavableData.mapView.getMapSampleSize();
-	//
-	// float[] gpsCoordinates = new float[nbr * 2];
-	// float[] mapCoordinates = new float[nbr * 2];
-	// ListIterator<CoordinateMapping> iter =
-	// m_SavableData.coordinateMappingList.listIterator();
-	// int index = 0;
-	// while (iter.hasNext() && iter.nextIndex() < MAX)
-	// {
-	// CoordinateMapping temp = iter.next();
-	// gpsCoordinates[index] = temp.gpsCoordinate.x;
-	// gpsCoordinates[index + 1] = temp.gpsCoordinate.y;
-	// mapCoordinates[index] = temp.mapCoordinate.x / iSampleSize;
-	// mapCoordinates[index + 1] = temp.mapCoordinate.y / iSampleSize;
-	// index += 2;
-	// }
-	//
-	// result = mapMatrix.setPolyToPoly(gpsCoordinates, 0, mapCoordinates, 0,
-	// nbr);
-	//
-	// if (result) {
-	// m_SavableData.mapView.setMapMatrix(mapMatrix);
-	// showDialog(DIALOG_MAP_IS_CALIBRATED);
-	// }
-	// else
-	// {
-	// showDialog(DIALOG_MAP_FAILED_TO_CALIBRATE);
-	// }
-	// }
 
 	private String[] mFileList;
 	private File mPath = new File(Environment.getExternalStorageDirectory()

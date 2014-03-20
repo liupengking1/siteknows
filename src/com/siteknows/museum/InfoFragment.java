@@ -2,6 +2,7 @@ package com.siteknows.museum;
 
 import com.Martin.MapCalibrator.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ public class InfoFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		View rootView = inflater.inflate(R.layout.fragment_games, container, false);
-		
+
 		return rootView;
 	}
 }

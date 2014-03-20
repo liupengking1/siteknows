@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -75,6 +76,7 @@ public class OnSiteFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Bundle bundle = this.getArguments();
+		savedInstanceState = getArguments();
 		View rootView = inflater.inflate(R.layout.main, container, false);
 		initView(rootView, savedInstanceState);
 		return rootView;
@@ -83,7 +85,6 @@ public class OnSiteFragment extends Fragment {
 	private void initView(View rootView, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		database = new DBAdapter(getActivity());
-
 		// Create our folder if it is not already created
 		if (!mPath.exists()) {
 			try {
@@ -92,8 +93,8 @@ public class OnSiteFragment extends Fragment {
 				// Log.e(TAG, "unable to write on the sd card " + e.toString());
 			}
 		}
-
 		if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
+
 			m_SavableData = (SaveData) savedInstanceState
 					.getParcelable("laststate");
 			m_SavableData.mapView = (MyDrawableImageView) rootView
@@ -131,9 +132,11 @@ public class OnSiteFragment extends Fragment {
 
 			// Restore preferences
 			SharedPreferences settings = (SharedPreferences) getActivity()
-					.getPreferences(getActivity().MODE_PRIVATE);
+					.getSharedPreferences("com.Martin.MapCalibrator.MapCalibrator.class",
+							getActivity().MODE_PRIVATE);
 			int oldVersion = settings.getInt("version", 0);
 			int currentVersion = 0;
+
 			PackageInfo pInfo = null;
 			try {
 				pInfo = getActivity().getPackageManager().getPackageInfo(
@@ -143,7 +146,7 @@ public class OnSiteFragment extends Fragment {
 			}
 			if (pInfo != null)
 				currentVersion = pInfo.versionCode;
-
+			
 			if (currentVersion > oldVersion) {
 				getActivity().showDialog(DIALOG_INFORMATION_ID);
 				SharedPreferences.Editor editor = settings.edit();
@@ -157,6 +160,8 @@ public class OnSiteFragment extends Fragment {
 
 			// Get the last used map (if any)
 			String lastUsedMap = settings.getString("lastUsedMap", "");
+
+			System.out.println("debuging......" + lastUsedMap);
 			if (lastUsedMap.length() != 0) {
 				File temp = new File(lastUsedMap);
 				if (temp.exists()) {
@@ -178,13 +183,7 @@ public class OnSiteFragment extends Fragment {
 			}
 		}
 
-		try {// We could try to keep track of wether it is displayed, but this
-				// is easier.
-				// Dialogs should be dismissed in OnPause to avoid problems.
-			getActivity().dismissDialog(DIALOG_COORDINATE_VERIFICATION_ID);
-		} catch (IllegalArgumentException e) {
-			// The dialog was not currently displayed.
-		}
+		// resetForNewMap();
 	}
 
 	@Override
@@ -196,29 +195,8 @@ public class OnSiteFragment extends Fragment {
 		// locationListener.stopListening();
 	}
 
-	//
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.menu, menu);
-	// menu.findItem(R.id.new_calibration_point).setEnabled(
-	// m_SavableData.m_bMapIsLoaded);
-	// return true;
-	// // }
-	//
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// if (m_SavableData.m_bMapIsLoaded && !m_SavableData.m_bIsCalibrating)
-	// menu.findItem(R.id.new_calibration_point).setEnabled(true);
-	// else
-	// menu.findItem(R.id.new_calibration_point).setEnabled(false);
-	//
-	// menu.findItem(R.id.use_calibration_point).setEnabled(
-	// m_SavableData.m_bIsCalibrating);
-	// return true;
-	// }
-
 	private void resetForNewMap() {
+		System.out.println("reset for new map");
 		m_SavableData.coordinateMappingList.clear();
 		m_SavableData.m_bMapIsLoaded = true;
 		m_SavableData.m_bIsCalibrating = false;
@@ -282,15 +260,6 @@ public class OnSiteFragment extends Fragment {
 		}
 	}
 
-	private void deleteOldReferencePoints() {
-		if (m_SavableData.m_iMapKey != -1) {
-			database.open();
-			database.deleteReferencePoints(m_SavableData.m_iMapKey);
-			database.close();
-			m_SavableData.coordinateMappingList = new ArrayList<CoordinateMapping>();
-		}
-	}
-
 	private void newFromFile() {
 		// showDialog(DIALOG_LOAD_FILE);
 		Intent fileIntent = new Intent();
@@ -301,326 +270,15 @@ public class OnSiteFragment extends Fragment {
 				ACTIVITY_REQUEST_CODE_SELECT_PICTURE);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.new_calibration_point:
-			m_SavableData.mapView.showCalibrationPoint();
-			m_SavableData.m_bIsCalibrating = true;
-			return true;
-		case R.id.use_calibration_point:
-			// Display the point to the user for verification and then possibly
-			// save
-			getActivity().showDialog(DIALOG_COORDINATE_VERIFICATION_ID);
-			return true;
-		case R.id.information:
-			getActivity().showDialog(DIALOG_INFORMATION_ID);
-			return true;
-		case R.id.reference_points: {
-			Intent intent = new Intent(getActivity(), CoordinateList.class);
-			long iMapKey = -1;
-
-			if (m_SavableData.mapFile != null) {
-				database.open();
-				iMapKey = database.getMapKey(m_SavableData.mapFile
-						.getAbsolutePath());
-				database.close();
-			}
-
-			intent.putExtra("MAP_KEY", iMapKey);
-			startActivity(intent);
-			return true;
-		}
-		case R.id.reset_reference_points: {
-			getActivity().showDialog(DIALOG_RESET_REFERENCE_POINTS);
-			return true;
-		}
-		case R.id.menu_maps: {
-			Intent intent = new Intent(getActivity(), MapActivity.class);
-			startActivityForResult(intent, ACTIVITY_REQUEST_CODE_SELECT_MAP);
-			return true;
-		}
-		case R.id.preferences: {
-			Intent intent = new Intent(getActivity(),
-					MyPreferencesActivity.class);
-			startActivity(intent);
-			return true;
-		}
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	// protected Dialog onCreateDialog(int id) {
-	// Dialog dialog = null;
-	// switch (id) {
-	// case DIALOG_COORDINATE_VERIFICATION_ID: {
-	// dialog = new Dialog(getActivity());
-	// dialog.setContentView(R.layout.verify_coordinate_dialog);
-	// dialog.setTitle("Calibration Point");
-	//
-	// Button button = (Button) dialog.findViewById(R.id.button);
-	// button.setOnClickListener(new SaveReferencePointClickListener());
-	// }
-	// break;
-	// case DIALOG_INFORMATION_ID: {
-	// AlertDialog.Builder builder = new Builder(getActivity());
-	// builder.setTitle("Information");
-	// builder.setMessage(
-	// Html.fromHtml(getString(R.string.str_menu_information_3_points)))
-	// .setPositiveButton("OK",
-	// new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog,
-	// int id) {
-	// dialog.dismiss();
-	// }
-	// });
-	// dialog = builder.show();
-	// }
-	// break;
-	// case DIALOG_CONVERSION_ERROR: {
-	// AlertDialog.Builder builder = new Builder(getActivity());
-	// builder.setTitle("Conversion Error");
-	// builder.setMessage(
-	// Html.fromHtml(getString(R.string.str_gps_conversion_error)))
-	// .setPositiveButton("OK",
-	// new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog,
-	// int id) {
-	// dialog.dismiss();
-	// }
-	// });
-	// dialog = builder.show();
-	// }
-	// break;
-	// case DIALOG_RESET_REFERENCE_POINTS: {
-	// AlertDialog.Builder builder = new Builder(getActivity());
-	// builder.setTitle("Reset Reference Points");
-	// builder.setMessage(
-	// Html.fromHtml(getString(R.string.str_reset_reference_points_verification)))
-	// .setPositiveButton("Yes",
-	// new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog,
-	// int id) {
-	// dialog.dismiss();
-	// deleteOldReferencePoints();
-	// }
-	// })
-	// .setNegativeButton("No",
-	// new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog,
-	// int id) {
-	// dialog.dismiss();
-	// }
-	// });
-	// dialog = builder.show();
-	// }
-	// break;
-	// case DIALOG_LOAD_FILE: // TODO:Remove, not used
-	// {
-	// loadFileList();
-	// AlertDialog.Builder builder = new Builder(getActivity());
-	// builder.setTitle("Choose your map file");
-	// if (mFileList == null) {
-	// // Log.e(TAG,
-	// // "Showing file picker before loading the file list");
-	// dialog = builder.create();
-	// return dialog;
-	// }
-	// builder.setItems(mFileList, new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog, int which) {
-	// mChosenFile = mFileList[which];
-	// File file = new File(mPath.getAbsolutePath()
-	// + File.separatorChar + mChosenFile);
-	// if (file.isDirectory()) {
-	// // TODO: Show files in the directory somehow.
-	// } else {
-	// resetForNewMap();
-	// }
-	// }
-	// });
-	// dialog = builder.show();
-	// }
-	// break;
-	// case DIALOG_MAP_IS_CALIBRATED: {
-	// AlertDialog.Builder builder = new Builder(getActivity());
-	// builder.setTitle("Successfully Calibrated");
-	// builder.setMessage(
-	// Html.fromHtml(getString(R.string.str_successfylly_calibrated)))
-	// .setPositiveButton("OK",
-	// new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog,
-	// int id) {
-	// dialog.dismiss();
-	// }
-	// });
-	// dialog = builder.show();
-	// }
-	// break;
-	// case DIALOG_MAP_FAILED_TO_CALIBRATE: {
-	// AlertDialog.Builder builder = new Builder(getActivity());
-	// builder.setTitle("Calibration Failed");
-	// builder.setMessage(
-	// Html.fromHtml(getString(R.string.str_failed_to_calibrate)))
-	// .setPositiveButton("OK",
-	// new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog,
-	// int id) {
-	// dialog.dismiss();
-	// }
-	// });
-	// dialog = builder.show();
-	// }
-	// break;
-	//
-	// default:
-	// dialog = null;
-	// }
-	// return dialog;
-	// }
-	//
 	// @Override
-	// protected void onPrepareDialog(int id, Dialog dialog) {
-	// super.onPrepareDialog(id, dialog);
-	//
-	// switch (id) {
-	// case DIALOG_COORDINATE_VERIFICATION_ID:
-	// // GPS coordinates
-	// locationIndex = (EditText) dialog
-	// .findViewById(R.id.wifiLocationIndex);
-	//
-	// locationIndex.setText(String.valueOf(lastLocationIndex),
-	// TextView.BufferType.EDITABLE);
-	//
-	// // Map coordinates
-	// PointF mapCoordinates = m_SavableData.mapView
-	// .getCalibrationMapCoordinates();
-	// EditText mapX = (EditText) dialog.findViewById(R.id.mapX);
-	// EditText mapY = (EditText) dialog.findViewById(R.id.mapY);
-	// mapX.setText(Float.toString(mapCoordinates.x),
-	// TextView.BufferType.NORMAL);
-	// mapY.setText(Float.toString(mapCoordinates.y),
-	// TextView.BufferType.NORMAL);
-	// break;
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// // Handle item selection
+	// switch (item.getItemId()) {
+	// case R.id.menu_maps: {
+	// Intent intent = new Intent(getActivity(), MapActivity.class);
+	// startActivityForResult(intent, ACTIVITY_REQUEST_CODE_SELECT_MAP);
+	// return true;
 	// }
-	// }
-	//
-	// private void setCoodrinates() {
-	// // GPS coordinates
-	// locationIndex = (EditText) dialog.findViewById(R.id.wifiLocationIndex);
-	//
-	// locationIndex.setText(String.valueOf(lastLocationIndex),
-	// TextView.BufferType.EDITABLE);
-	//
-	// // Map coordinates
-	// PointF mapCoordinates = m_SavableData.mapView
-	// .getCalibrationMapCoordinates();
-	// EditText mapX = (EditText) dialog.findViewById(R.id.mapX);
-	// EditText mapY = (EditText) dialog.findViewById(R.id.mapY);
-	// mapX.setText(Float.toString(mapCoordinates.x),
-	// TextView.BufferType.NORMAL);
-	// mapY.setText(Float.toString(mapCoordinates.y),
-	// TextView.BufferType.NORMAL);
-	// }
-
-	// save reference point to server CALL calibrate network communcation here
-	private class SaveReferencePointClickListener implements
-			View.OnClickListener {
-		public void onClick(View v) {
-			boolean conversionError = true;
-			switch (v.getId()) {
-			case R.id.button:
-				try {
-					// If the coordinates are badly formatted, we get an
-					// exception in the convert above.
-
-					conversionError = false;
-
-					// If everything went well, we hide the calibration point
-					m_SavableData.mapView.hideCalibrationPoint();
-					m_SavableData.m_bIsCalibrating = false;
-
-					lastLocationIndex = Integer.parseInt(locationIndex
-							.getText().toString());
-					System.out.println("lastlocationindex: "
-							+ lastLocationIndex);
-
-					// save the point and possibly calculate a new matrix
-
-					CoordinateMapping coordinate = new CoordinateMapping(
-							m_SavableData.mapView
-									.getCalibrationMapCoordinates(),
-							lastLocationIndex);
-					m_SavableData.coordinateMappingList.add(coordinate);
-
-					database.open();
-					database.insertReferencePoint(m_SavableData.m_iMapKey,
-							coordinate);
-					database.close();
-
-					UploadWifiFingerprint upload = new UploadWifiFingerprint();
-					upload.scanAndUpload(getActivity(), "null",
-							lastLocationIndex);
-				} catch (IllegalArgumentException e) {
-					// Log.e(TAG, "unable to convert gps coordinates " +
-					// e.toString());
-					conversionError = true;
-				}
-				break;
-			default:
-				break;
-			}
-			getActivity().dismissDialog(DIALOG_COORDINATE_VERIFICATION_ID);
-			if (conversionError == true)
-				getActivity().showDialog(DIALOG_CONVERSION_ERROR);
-		}
-	}
-
-	/*
-	 * Tries to calibrate the loaded map using the 3 first stored coordinates.
-	 */
-	// private void tryToCalibrateMap() {
-	// if (m_SavableData.coordinateMappingList.size() < 3)
-	// return;
-	//
-	// //GPS stuff
-	// int nbr = m_SavableData.coordinateMappingList.size();
-	// int MAX = 3; // It does not seem to work with 4 coordinates when we try
-	// to map. The mappings get totally wrong.
-	// nbr = (nbr > MAX ? MAX : nbr); // We only handle a maximum of MAX
-	// coordinates
-	// Matrix mapMatrix = new Matrix();
-	// boolean result = false;
-	//
-	// int iSampleSize = m_SavableData.mapView.getMapSampleSize();
-	//
-	// float[] gpsCoordinates = new float[nbr * 2];
-	// float[] mapCoordinates = new float[nbr * 2];
-	// ListIterator<CoordinateMapping> iter =
-	// m_SavableData.coordinateMappingList.listIterator();
-	// int index = 0;
-	// while (iter.hasNext() && iter.nextIndex() < MAX)
-	// {
-	// CoordinateMapping temp = iter.next();
-	// gpsCoordinates[index] = temp.gpsCoordinate.x;
-	// gpsCoordinates[index + 1] = temp.gpsCoordinate.y;
-	// mapCoordinates[index] = temp.mapCoordinate.x / iSampleSize;
-	// mapCoordinates[index + 1] = temp.mapCoordinate.y / iSampleSize;
-	// index += 2;
-	// }
-	//
-	// result = mapMatrix.setPolyToPoly(gpsCoordinates, 0, mapCoordinates, 0,
-	// nbr);
-	//
-	// if (result) {
-	// m_SavableData.mapView.setMapMatrix(mapMatrix);
-	// showDialog(DIALOG_MAP_IS_CALIBRATED);
-	// }
-	// else
-	// {
-	// showDialog(DIALOG_MAP_FAILED_TO_CALIBRATE);
 	// }
 	// }
 
