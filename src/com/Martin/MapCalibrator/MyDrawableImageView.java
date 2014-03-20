@@ -310,27 +310,27 @@ public class MyDrawableImageView extends ImageView {
 				this.setImageMatrix(m_SavableData.currentMapTileToDisplayMatrix);
 				this.setImageBitmap(temp);
 
-				if (largeMapSupport == true)
-					Toast.makeText(
-							this.getContext(),
-							"Support for large maps is enabled.\n"
-									+ "Original image is " + m_mapRect.width()
-									+ " x " + m_mapRect.height()
-									+ ". The part read is "
-									+ m_mapRectRead.width() + " x "
-									+ m_mapRectRead.height() + ".",
-							Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(
-							this.getContext(),
-							"Original image is "
-									+ m_mapRect.width()
-									+ " x "
-									+ m_mapRect.height()
-									+ ". The image is down sampled with a factor of "
-									+ m_mapSampleSize
-									+ ". Enable support for large maps in the preferences if full resolution is needed.",
-							Toast.LENGTH_LONG).show();
+//				if (largeMapSupport == true)
+//					Toast.makeText(
+//							this.getContext(),
+//							"Support for large maps is enabled.\n"
+//									+ "Original image is " + m_mapRect.width()
+//									+ " x " + m_mapRect.height()
+//									+ ". The part read is "
+//									+ m_mapRectRead.width() + " x "
+//									+ m_mapRectRead.height() + ".",
+//							Toast.LENGTH_LONG).show();
+//				else
+//					Toast.makeText(
+//							this.getContext(),
+//							"Original image is "
+//									+ m_mapRect.width()
+//									+ " x "
+//									+ m_mapRect.height()
+//									+ ". The image is down sampled with a factor of "
+//									+ m_mapSampleSize
+//									+ ". Enable support for large maps in the preferences if full resolution is needed.",
+//							Toast.LENGTH_LONG).show();
 
 				break;
 			} catch (OutOfMemoryError e) {

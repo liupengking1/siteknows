@@ -135,16 +135,16 @@ public class OnSiteFragment extends Fragment {
 			}
 			if (pInfo != null)
 				currentVersion = pInfo.versionCode;
-			
+
 			if (currentVersion > oldVersion) {
 				getActivity().showDialog(DIALOG_INFORMATION_ID);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putInt("version", currentVersion);
 				editor.commit();
 			} else {
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Use the menu button to see all available options.",
-						Toast.LENGTH_LONG).show();
+				// Toast.makeText(getActivity().getApplicationContext(),
+				// "Use the menu button to see all available options.",
+				// Toast.LENGTH_LONG).show();
 			}
 
 			// Get the last used map (if any)
@@ -179,9 +179,8 @@ public class OnSiteFragment extends Fragment {
 	public void onDestroy() {
 		super.onDestroy();
 		//
-		// if (isFinishing() && m_SavableData.m_bIsTrackingPosition
-		// && locationListener != null)
-		// locationListener.stopListening();
+		if (locationListener != null)
+			locationListener.stopListening();
 	}
 
 	private void resetForNewMap() {
@@ -274,6 +273,7 @@ public class OnSiteFragment extends Fragment {
 	private String[] mFileList;
 	private File mPath = new File(Environment.getExternalStorageDirectory()
 			+ "//MapCalibrator//");
+
 	private void loadFileList() {
 		try {
 			mPath.mkdirs();
