@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity implements
 				// on changing the page
 				// make respected tab selected
 				actionBar.setSelectedNavigationItem(position);
-				if (position == 1) {
+				if (position == 0) {
 //					Intent i = new Intent(getApplicationContext(),
 //							com.Martin.MapCalibrator.MapCalibrator.class);
 					Intent i = new Intent(getApplicationContext(),
