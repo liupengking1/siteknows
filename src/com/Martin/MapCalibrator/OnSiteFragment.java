@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -37,14 +38,17 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +63,16 @@ public class OnSiteFragment extends Fragment {
 	private static final int ACTIVITY_REQUEST_CODE_SELECT_PICTURE = 2;
 	private MyIndoorLocationListener locationListener;
 
+	private Button btn_position;
+
+	private Button btn1;
+	private Button btn2;
+	private Button btn3;
+	private Button btn4;
+	private Button btn5;
+
 	private DBAdapter database;
+	private DBAdapter mDbHelper;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,8 +80,125 @@ public class OnSiteFragment extends Fragment {
 		// Bundle bundle = this.getArguments();
 		savedInstanceState = getArguments();
 		View rootView = inflater.inflate(R.layout.main, container, false);
+
+		initButton(rootView);
 		initView(rootView, savedInstanceState);
 		return rootView;
+	}
+
+	private void fillNewMap(int floor, View rootView) {
+		mDbHelper = new DBAdapter(getActivity());
+		mDbHelper.open();
+		Cursor c = mDbHelper.getAllMaps();
+		String lastUsedMap = null;
+		long lastUsedMapKey = 0;
+		int i = 0;
+		if (c != null) {
+			if (c.moveToFirst()) {
+				// Now create an array adapter and set it to display using our
+				// row
+				do {
+					if (i == floor) {
+						lastUsedMap = c.getString(2);
+						lastUsedMapKey = c.getLong(0);
+						System.out.println(c.getString(2));
+						System.out.println(c.getLong(0));
+						break;
+					}
+					i++;
+				} while (c.moveToNext());
+			}
+		} else {
+			System.out.println("cursor is null");
+		}
+
+		mDbHelper.close();
+
+		m_SavableData = new SaveData();
+		// findViewById is only visible in Activity and View, therefore I
+		// can not create it in my object
+		m_SavableData.mapView = (MyDrawableImageView) rootView
+				.findViewById(R.id.imageView);
+
+		if (lastUsedMap.length() != 0) {
+			File temp = new File(lastUsedMap);
+			if (temp.exists()) {
+				m_SavableData.mapFile = new File(lastUsedMap);
+				m_SavableData.m_iMapKey = lastUsedMapKey;
+				System.out.println("debuging......" + lastUsedMap);
+				System.out.println("debuging......" + lastUsedMapKey);
+				resetForNewMap();
+			}
+		}
+	}
+
+	private void initButton(final View rootView) {
+		btn1 = (Button) rootView.findViewById(R.id.button1);
+		btn2 = (Button) rootView.findViewById(R.id.button2);
+		btn3 = (Button) rootView.findViewById(R.id.button3);
+		btn4 = (Button) rootView.findViewById(R.id.button4);
+		btn5 = (Button) rootView.findViewById(R.id.button5);
+		btn1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("floor 1 selected");
+				btn1.setBackgroundResource(R.drawable.btn_1_select);
+				btn2.setBackgroundResource(R.drawable.btn_2_unselect);
+				btn3.setBackgroundResource(R.drawable.btn_3_unselect);
+				btn4.setBackgroundResource(R.drawable.btn_4_unselect);
+				btn5.setBackgroundResource(R.drawable.btn_5_unselect);
+				fillNewMap(0, rootView);
+			}
+		});
+		btn2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("floor 2 selected");
+				btn1.setBackgroundResource(R.drawable.btn_1_unselect);
+				btn2.setBackgroundResource(R.drawable.btn_2_select);
+				btn3.setBackgroundResource(R.drawable.btn_3_unselect);
+				btn4.setBackgroundResource(R.drawable.btn_4_unselect);
+				btn5.setBackgroundResource(R.drawable.btn_5_unselect);
+				fillNewMap(1, rootView);
+			}
+		});
+		btn3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("floor 3 selected");
+				btn1.setBackgroundResource(R.drawable.btn_1_unselect);
+				btn2.setBackgroundResource(R.drawable.btn_2_unselect);
+				btn3.setBackgroundResource(R.drawable.btn_3_select);
+				btn4.setBackgroundResource(R.drawable.btn_4_unselect);
+				btn5.setBackgroundResource(R.drawable.btn_5_unselect);
+				fillNewMap(2, rootView);
+			}
+		});
+		btn4.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("floor 4 selected");
+				btn1.setBackgroundResource(R.drawable.btn_1_unselect);
+				btn2.setBackgroundResource(R.drawable.btn_2_unselect);
+				btn3.setBackgroundResource(R.drawable.btn_3_unselect);
+				btn4.setBackgroundResource(R.drawable.btn_4_select);
+				btn5.setBackgroundResource(R.drawable.btn_5_unselect);
+				fillNewMap(3, rootView);
+			}
+		});
+		btn5.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("floor 5 selected");
+				btn1.setBackgroundResource(R.drawable.btn_1_unselect);
+				btn2.setBackgroundResource(R.drawable.btn_2_unselect);
+				btn3.setBackgroundResource(R.drawable.btn_3_unselect);
+				btn4.setBackgroundResource(R.drawable.btn_4_unselect);
+				btn5.setBackgroundResource(R.drawable.btn_5_select);
+				fillNewMap(4, rootView);
+			}
+		});
+
 	}
 
 	private void initView(View rootView, Bundle savedInstanceState) {
@@ -150,13 +280,15 @@ public class OnSiteFragment extends Fragment {
 			// Get the last used map (if any)
 			String lastUsedMap = settings.getString("lastUsedMap", "");
 
-			System.out.println("debuging......" + lastUsedMap);
 			if (lastUsedMap.length() != 0) {
 				File temp = new File(lastUsedMap);
 				if (temp.exists()) {
 					m_SavableData.mapFile = new File(lastUsedMap);
 					m_SavableData.m_iMapKey = settings.getLong(
 							"lastUsedMapKey", 0);
+					System.out.println("debuging......" + lastUsedMap);
+					System.out.println("debuging......"
+							+ settings.getLong("lastUsedMapKey", 0));
 					resetForNewMap();
 				} else {
 					Toast.makeText(
@@ -248,16 +380,6 @@ public class OnSiteFragment extends Fragment {
 		}
 	}
 
-	private void newFromFile() {
-		// showDialog(DIALOG_LOAD_FILE);
-		Intent fileIntent = new Intent();
-		fileIntent.setType("image/*");
-		fileIntent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(
-				Intent.createChooser(fileIntent, "Select a Map"),
-				ACTIVITY_REQUEST_CODE_SELECT_PICTURE);
-	}
-
 	// @Override
 	// public boolean onOptionsItemSelected(MenuItem item) {
 	// // Handle item selection
@@ -273,28 +395,6 @@ public class OnSiteFragment extends Fragment {
 	private String[] mFileList;
 	private File mPath = new File(Environment.getExternalStorageDirectory()
 			+ "//MapCalibrator//");
-
-	private void loadFileList() {
-		try {
-			mPath.mkdirs();
-		} catch (SecurityException e) {
-			// Log.e(TAG, "unable to write on the sd card " + e.toString());
-		}
-		if (mPath.exists()) {
-			FilenameFilter filter = new FilenameFilter() {
-				public boolean accept(File dir, String filename) {
-					// File sel = new File(dir, filename);
-					return filename.endsWith(".png")
-							|| filename.endsWith(".jpg")
-							|| filename.endsWith(".jpeg");// ||
-															// sel.isDirectory();
-				}
-			};
-			mFileList = mPath.list(filter);
-		} else {
-			mFileList = new String[0];
-		}
-	}
 
 	// @Override
 	// protected void onActivityResult(int requestCode, int resultCode, Intent
