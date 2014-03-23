@@ -66,7 +66,7 @@ public class UpdateIndoorLocation {
 
 					if (true) {
 						// for debugging
-						System.out.println("wifi scanning debugging, count:"+count);
+//						System.out.println("wifi scanning debugging, count:"+count);
 						reportPositionChanged(count%4);
 						count++;
 					} else {

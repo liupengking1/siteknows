@@ -71,6 +71,7 @@
             android:exported="false" >
         </activity>
         <activity android:name=".PopupWindow" android:theme="@style/MyDialogStyleBottom" /> 
+        <activity android:name=".webActivity"/> 
     </application>
 
 </manifest>

@@ -132,12 +132,26 @@ public class OnSiteFragment extends Fragment {
 		}
 	}
 
+	private void popUpWindow() {
+		Intent i = new Intent(getActivity(), PopupWindow.class);
+		startActivity(i);
+	}
+
 	private void initButton(final View rootView) {
+		btn_position = (Button) rootView.findViewById(R.id.buttonpos);
 		btn1 = (Button) rootView.findViewById(R.id.button1);
 		btn2 = (Button) rootView.findViewById(R.id.button2);
 		btn3 = (Button) rootView.findViewById(R.id.button3);
 		btn4 = (Button) rootView.findViewById(R.id.button4);
 		btn5 = (Button) rootView.findViewById(R.id.button5);
+		btn_position.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("position selected");
+				popUpWindow();
+			}
+		});
+
 		btn1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -395,58 +409,6 @@ public class OnSiteFragment extends Fragment {
 	private String[] mFileList;
 	private File mPath = new File(Environment.getExternalStorageDirectory()
 			+ "//MapCalibrator//");
-
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode, Intent
-	// data) {
-	// if (requestCode == ACTIVITY_REQUEST_CODE_TAKE_PICTURE
-	// && resultCode == Activity.RESULT_OK) {
-	// resetForNewMap();
-	// } else if (requestCode == ACTIVITY_REQUEST_CODE_SELECT_PICTURE
-	// && resultCode == Activity.RESULT_OK) {
-	// Uri selectedImage = data.getData();
-	//
-	// // Uri:s should be of type "content://" according to the
-	// // documentation for ACTION_GET_CONTENT
-	// // The Astro file manager returns an Uri of Type "file://" so we
-	// // must handle that as well.
-	// if (selectedImage.toString().toLowerCase().startsWith("content://")) {
-	// String[] filePathColumn = { MediaStore.Images.Media.DATA };
-	// Cursor cursor = getActivity().getContentResolver().query(
-	// selectedImage, filePathColumn, null, null, null);
-	// if (cursor != null) {
-	// cursor.moveToFirst();
-	//
-	// int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	// String filePath = cursor.getString(columnIndex); // file
-	// // path
-	// // of
-	// // selected
-	// // image
-	// cursor.close();
-	//
-	// m_SavableData.mapFile = new File(filePath);
-	//
-	// resetForNewMap();
-	// }
-	// } else if (selectedImage.toString().toLowerCase()
-	// .startsWith("file://")) {
-	// // Handle stuff from the ASTRO file manager
-	// String filePath = selectedImage.getPath();
-	// m_SavableData.mapFile = new File(filePath);
-	// resetForNewMap();
-	// } else {
-	// // TODO: Well, what do we do?
-	// // Show a dialog perhaps?
-	// }
-	// } else if (requestCode == ACTIVITY_REQUEST_CODE_SELECT_MAP
-	// && resultCode == Activity.RESULT_OK) {
-	// String filePath = data.getExtras().getString(MAP_FILE_PATH);
-	// m_SavableData.mapFile = new File(filePath);
-	// resetForNewMap();
-	// }
-	// }
-	// }
 
 	class SaveData implements Parcelable {
 		public SaveData() {
