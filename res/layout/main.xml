@@ -33,30 +33,12 @@
                 android:text="" />
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/button5"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/btn_1_select"
-                android:text="" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/btn_2_unselect"
-                android:text="" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/btn_3_unselect"
+                android:background="@drawable/btn_5_unselect"
                 android:text="" />
 
             <Button
@@ -69,12 +51,30 @@
                 android:text="" />
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/button3"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/btn_5_unselect"
+                android:background="@drawable/btn_3_unselect"
+                android:text="" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_2_unselect"
+                android:text="" />
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_1_select"
                 android:text="" />
         </LinearLayout>
     </FrameLayout>

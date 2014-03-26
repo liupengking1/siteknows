@@ -4,9 +4,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class webActivity extends Activity {
 
@@ -16,14 +18,14 @@ public class webActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.webview);
-
 		// Initilization
 		actionBar = getActionBar();
 		// actionBar.setHomeButtonEnabled(false);
 		// actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		WebView myWebView = (WebView) findViewById(R.id.webview);
-		myWebView.loadUrl("http://v3g742.axshare.com/weixin.html");
+//		myWebView.setWebViewClient(new WebViewClient());
+		myWebView.loadUrl("http://streambels.com");
 
 	}
 

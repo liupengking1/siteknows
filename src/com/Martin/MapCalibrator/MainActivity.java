@@ -7,6 +7,8 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -30,6 +32,11 @@ public class MainActivity extends FragmentActivity implements
 		// Initilization
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color
+				.rgb(0, 193, 164)));
+		actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.WHITE));
+		actionBar.setSplitBackgroundDrawable(new ColorDrawable(Color.rgb(0,
+				193, 164)));
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
 				savedInstanceState);
 
@@ -85,7 +92,6 @@ public class MainActivity extends FragmentActivity implements
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 

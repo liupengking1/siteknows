@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +108,7 @@ public class PopupWindow extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alert_dialog);
+		getWindow().setLayout (LayoutParams.FILL_PARENT /* width */ , LayoutParams.WRAP_CONTENT /* height */);
 		imageUrls = new String[4];
 		imageUrls[0] = "https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg";
 		imageUrls[1] = "https://lh4.googleusercontent.com/--dq8niRp7W4/URquVgmXvgI/AAAAAAAAAbs/-gnuLQfNnBA/s1024/A%252520Song%252520of%252520Ice%252520and%252520Fire.jpg";
@@ -120,6 +122,7 @@ public class PopupWindow extends Activity {
 		imageLoader = ImageLoader.getInstance();
 
 		layout = (LinearLayout) findViewById(R.id.pop_layout);
+
 
 		// 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
 		layout.setOnClickListener(new OnClickListener() {
@@ -141,7 +144,7 @@ public class PopupWindow extends Activity {
 				.showImageForEmptyUri(R.drawable.ic_empty)
 				.showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
 				.cacheOnDisc(true).considerExifParams(true)
-				.displayer(new RoundedBitmapDisplayer(20)).build();
+				.build();
 		listview = (ListView) findViewById(android.R.id.list);
 		listview.setAdapter(new ItemAdapter());
 		listview.setOnItemClickListener(new OnItemClickListener() {
