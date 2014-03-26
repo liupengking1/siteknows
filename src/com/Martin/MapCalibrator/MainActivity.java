@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +15,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -37,6 +43,13 @@ public class MainActivity extends FragmentActivity implements
 		actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.WHITE));
 		actionBar.setSplitBackgroundDrawable(new ColorDrawable(Color.rgb(0,
 				193, 164)));
+		// int titleId = Resources.getSystem().getIdentifier("action_bar_title",
+		// "id", "android");
+		// TextView yourTextView = (TextView) findViewById(titleId);
+		// yourTextView.setTextColor(Color.BLACK);
+
+
+
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
 				savedInstanceState);
 
