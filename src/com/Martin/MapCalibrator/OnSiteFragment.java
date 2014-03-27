@@ -37,6 +37,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
