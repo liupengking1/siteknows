@@ -38,17 +38,19 @@ public class MainActivity extends FragmentActivity implements
 		// Initilization
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		actionBar = getActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+//		actionBar.setHomeAsUpIndicator(R.drawable.btn_back);
+
 		actionBar.setBackgroundDrawable(new ColorDrawable(Color
 				.rgb(0, 193, 164)));
 		actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.WHITE));
 		actionBar.setSplitBackgroundDrawable(new ColorDrawable(Color.rgb(0,
 				193, 164)));
-		// int titleId = Resources.getSystem().getIdentifier("action_bar_title",
-		// "id", "android");
-		// TextView yourTextView = (TextView) findViewById(titleId);
-		// yourTextView.setTextColor(Color.BLACK);
-
-
+		int titleId = Resources.getSystem().getIdentifier("action_bar_title",
+				"id", "android");
+		TextView yourTextView = (TextView) findViewById(titleId);
+		yourTextView.setTextColor(Color.WHITE);
 
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
 				savedInstanceState);
@@ -119,6 +121,11 @@ public class MainActivity extends FragmentActivity implements
 					com.Martin.MapCalibrator.MapCalibrator.class);
 			startActivity(i);
 		}
+		if (item.getItemId() == android.R.id.home) {
+			// app icon in action bar clicked; goto parent activity.
+			this.finish();
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
