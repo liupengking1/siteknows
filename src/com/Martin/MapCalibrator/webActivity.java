@@ -52,8 +52,8 @@ public class webActivity extends Activity {
 				return true;
 			}
 		});
-		myWebView.loadUrl("http://streambels.com");
-
+		myWebView
+				.loadUrl("http://crabcanon.github.io/media/kiasma/index1.html#!/items/item-3");
 	}
 
 	@Override
